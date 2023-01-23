@@ -2,34 +2,70 @@
 import java.awt.Color;
 import java.awt.Graphics;
 
-
 public class GuessFrame extends javax.swing.JFrame {
-    String hidden = "";
+
+    private String hidden = "";
     private String guessWord = "";
     boolean started = false;
     private String guess = "";
     private int tries = 0;
     private boolean correctGuess = false;
-    private WordManager Manager = new WordManager();
-    
-    //private WordManager Manager = new WordManager("words.txt");
-    
-    
+    private WordManager Manager = new WordManager("words.txt");
+    private SoundManager SFX = new SoundManager();
+
     public GuessFrame() {
         initComponents();
         guessStart.setEnabled(false);
         guessResult.setEditable(false);
+
     }
-    
+
     public void drawStuff() {
         Graphics g = drawPanel.getGraphics();
-        g.setColor(Color.WHITE);
-        g.fillRect(0,0,drawPanel.getWidth(), drawPanel.getHeight() );
-        g.setColor(Color.BLUE);
-        g.drawString("hello", 50, 200);
-        g.drawOval(100,100,80,30);
-        g.drawLine(50, 150, 200, 180);
-        g.drawRect(100, 50, 40, 60);
+        g.setColor(Color.BLACK);
+        if (tries >= 1) {
+            g.drawLine(100, 250, 200, 250);
+        }
+        if (tries >= 2) {
+            g.drawLine(150, 250, 150, 50);
+        }
+        if (tries >= 3) {
+            g.drawLine(150, 50, 250, 50);
+        }
+        if (tries >= 4) {
+            g.drawLine(250, 50, 250, 75);
+        }
+        if (tries >= 5) {
+            g.drawLine(150, 75, 175, 50);
+        }
+        if (tries >= 6) {
+            g.drawOval(230, 75, 40, 40);
+        }
+        if (tries >= 7) {
+            g.drawLine(250, 115, 250, 175);
+        }
+        if (tries >= 8) {
+            g.drawLine(250, 175, 225, 200);
+        }
+        if (tries >= 9) {
+            g.drawLine(250, 175, 275, 200);
+        }
+        if (tries >= 10) {
+            g.drawLine(250, 130, 225, 140);
+        }
+        if (tries >= 11) {
+            g.drawLine(250, 130, 275, 140);
+            try {
+                SFX.playSFX("avii.wav");
+            } catch (Exception e) {
+            }
+            guessField.setText("YOU LOSE! THE WORD WAS: " + guessWord);
+            tries = 0;
+            guessStart.setText("Generate word to play again!");
+            guessField.setEditable(false);
+            guessStart.setEnabled(false);
+        }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -76,7 +112,7 @@ public class GuessFrame extends javax.swing.JFrame {
         drawPanel.setLayout(drawPanelLayout);
         drawPanelLayout.setHorizontalGroup(
             drawPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 453, Short.MAX_VALUE)
         );
         drawPanelLayout.setVerticalGroup(
             drawPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -101,17 +137,14 @@ public class GuessFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(195, 195, 195)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(guessResult, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(guessStart)
-                            .addGap(83, 83, 83)))
-                    .addComponent(guessField, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(drawPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(98, 98, 98)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(guessField, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+                    .addComponent(guessResult)
+                    .addComponent(guessStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,9 +154,9 @@ public class GuessFrame extends javax.swing.JFrame {
                 .addComponent(guessField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(guessStart)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(guessResult, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16))
+                .addGap(22, 22, 22))
         );
 
         pack();
@@ -137,33 +170,50 @@ public class GuessFrame extends javax.swing.JFrame {
         guess = guessField.getText();
         correctGuess = false;
         for (int i = 0; i < guessWord.length(); i++) {
-            if (guess.equals(guessWord.substring(i, i+1))) {
-                hidden = hidden.substring(0, i) + guess + hidden.substring(i+1);
+            if (guess.equals(guessWord.substring(i, i + 1))) {
+                hidden = hidden.substring(0, i) + guess + hidden.substring(i + 1);
                 guessResult.setText(hidden);
                 correctGuess = true;
             }
         }
         if (hidden.equals(guessWord)) {
-         
+            try {
+                SFX.playSFX("win.wav");
+            } catch (Exception e) {
+            }
             guessField.setText("YOU WIN!");
+            tries = 0;
+            guessStart.setText("Generate word to play again!");
             guessField.setEditable(false);
             guessStart.setEnabled(false);
-            
-            
+
         }
         if (!correctGuess) {
             tries++;
+            try {
+                SFX.playSFX("flash_grenade_00.wav");
+            } catch (Exception e) {
+            }
             drawStuff();
         } else {
+            try {
+                SFX.playSFX("ignite.wav");
+            } catch (Exception e) {
+            }
             drawStuff();
         }
 
-        
+
     }//GEN-LAST:event_guessStartActionPerformed
-    
+
 
     private void generateWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateWordActionPerformed
         guessWord = Manager.getWord();
+        try {
+            SFX.playSFX("43578 - pilot_killed_indicator_BU.wav");
+        } catch (Exception e) {
+        }
+        tries = 0;
         guessField.setEditable(true);
         guessStart.setText("Guess");
         guessStart.setEnabled(true);
@@ -177,14 +227,14 @@ public class GuessFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_generateWordActionPerformed
 
     private void guessResultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guessResultActionPerformed
-        
-        
+
+
     }//GEN-LAST:event_guessResultActionPerformed
 
     private void guessFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_guessFieldKeyTyped
-      
+
         guessField.setText("");
-       
+
     }//GEN-LAST:event_guessFieldKeyTyped
 
     /**
@@ -221,11 +271,8 @@ public class GuessFrame extends javax.swing.JFrame {
             }
         });
     }
-    
-    
-    
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel drawPanel;
     private javax.swing.JMenuItem generateWord;
@@ -236,5 +283,4 @@ public class GuessFrame extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     // End of variables declaration//GEN-END:variables
 
- 
 }
