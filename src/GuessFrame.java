@@ -82,6 +82,7 @@ public class GuessFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        guessField.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
         guessField.setText("Guess Here");
         guessField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -101,6 +102,7 @@ public class GuessFrame extends javax.swing.JFrame {
             }
         });
 
+        guessResult.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
         guessResult.setText("Generate Word First!");
         guessResult.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -116,7 +118,7 @@ public class GuessFrame extends javax.swing.JFrame {
         );
         drawPanelLayout.setVerticalGroup(
             drawPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 268, Short.MAX_VALUE)
+            .addGap(0, 269, Short.MAX_VALUE)
         );
 
         jMenu1.setText("Guess Game");
